@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchAdminData, deleteResource, deleteBooking, deleteUser, updateResource, updateBooking, updateUser, addResource } from '../api'; // 👈 we'll create these APIs
+import '../Adminpanel.css'; // Importing the CSS file
 
 export default function AdminDashboard() {
   const [data, setData] = useState({ users: [], bookings: [], resources: [] });
@@ -70,25 +71,25 @@ export default function AdminDashboard() {
     }
   };
 
-  if (error) return <div className="text-red-500 p-5">{error}</div>;
-  if (loading) return <div className="text-white p-5 animate-pulse">Loading Admin Dashboard...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+  if (loading) return <div className="loading-message">Loading Admin Dashboard...</div>;
 
   return (
-    <div className="p-5 space-y-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Admin Dashboard</h1>
+    <div className="admin-dashboard">
+      <h1 className="header">Admin Dashboard</h1>
 
       {/* Add New Resource Button */}
-      <div className="flex justify-end mb-6">
+      <div className="add-resource-container">
         {addingResource ? (
           <AddResourceForm onSave={handleAddResource} onCancel={() => setAddingResource(false)} />
         ) : (
-          <button onClick={() => setAddingResource(true)} className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-xl text-white">
+          <button onClick={() => setAddingResource(true)} className="btn add-resource-btn">
             + Add Resource
           </button>
         )}
       </div>
 
-      {/* Resources */}
+      {/* Resources Section */}
       <Section
         title="Resources"
         items={data.resources}
@@ -97,7 +98,7 @@ export default function AdminDashboard() {
         handleEdit={handleEdit}
       />
 
-      {/* Bookings */}
+      {/* Bookings Section */}
       <Section
         title="Bookings"
         items={data.bookings}
@@ -106,7 +107,7 @@ export default function AdminDashboard() {
         handleEdit={handleEdit}
       />
 
-      {/* Users */}
+      {/* Users Section */}
       <Section
         title="Users"
         items={data.users}
@@ -131,17 +132,17 @@ export default function AdminDashboard() {
 // Section component
 function Section({ title, items, type, handleDelete, handleEdit }) {
   return (
-    <section>
-      <h2 className="text-2xl font-semibold mb-4">{title}</h2>
-      <ul className="space-y-4">
+    <section className="section">
+      <h2 className="section-title">{title}</h2>
+      <ul className="section-list">
         {items.map((item) => (
-          <li key={item.id} className="p-4 bg-gray-800 rounded-xl space-y-2">
+          <li key={item.id} className="section-item">
             {Object.entries(item).map(([key, value]) => (
               <p key={key}><strong>{key}:</strong> {value}</p>
             ))}
-            <div className="flex gap-4 mt-2">
-              <button className="text-blue-400 hover:underline" onClick={() => handleEdit(type, item)}>Edit</button>
-              <button className="text-red-400 hover:underline" onClick={() => handleDelete(type, item.id)}>Delete</button>
+            <div className="item-actions">
+              <button className="btn edit-btn" onClick={() => handleEdit(type, item)}>Edit</button>
+              <button className="btn delete-btn" onClick={() => handleDelete(type, item.id)}>Delete</button>
             </div>
           </li>
         ))}
@@ -159,23 +160,23 @@ function EditForm({ type, item, onSave, onCancel }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-gray-900 p-8 rounded-xl space-y-4 w-96">
-        <h2 className="text-xl font-bold mb-4">Edit {type}</h2>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Edit {type}</h2>
         {Object.keys(item).filter(key => key !== 'id').map((key) => (
           <div key={key}>
-            <label className="block capitalize">{key}</label>
+            <label className="input-label">{key}</label>
             <input
-              className="w-full p-2 rounded bg-gray-700 text-white"
+              className="input-field"
               name={key}
               value={formData[key] || ''}
               onChange={handleChange}
             />
           </div>
         ))}
-        <div className="flex justify-end gap-4">
-          <button className="bg-green-500 px-4 py-2 rounded-xl" onClick={() => onSave(type, formData)}>Save</button>
-          <button className="bg-red-500 px-4 py-2 rounded-xl" onClick={onCancel}>Cancel</button>
+        <div className="modal-actions">
+          <button className="btn save-btn" onClick={() => onSave(type, formData)}>Save</button>
+          <button className="btn cancel-btn" onClick={onCancel}>Cancel</button>
         </div>
       </div>
     </div>
@@ -191,25 +192,25 @@ function AddResourceForm({ onSave, onCancel }) {
   };
 
   return (
-    <div className="bg-gray-800 p-6 rounded-xl space-y-4 w-full">
-      <h2 className="text-xl font-bold mb-4">Add New Resource</h2>
+    <div className="add-resource-form">
+      <h2>Add New Resource</h2>
       <input
-        className="w-full p-2 rounded bg-gray-700 text-white"
+        className="input-field"
         placeholder="Name"
         name="name"
         value={formData.name}
         onChange={handleChange}
       />
       <input
-        className="w-full p-2 rounded bg-gray-700 text-white"
+        className="input-field"
         placeholder="Description"
         name="description"
         value={formData.description}
         onChange={handleChange}
       />
-      <div className="flex justify-end gap-4">
-        <button className="bg-green-500 px-4 py-2 rounded-xl" onClick={() => onSave(formData)}>Add</button>
-        <button className="bg-red-500 px-4 py-2 rounded-xl" onClick={onCancel}>Cancel</button>
+      <div className="form-actions">
+        <button className="btn add-btn" onClick={() => onSave(formData)}>Add</button>
+        <button className="btn cancel-btn" onClick={onCancel}>Cancel</button>
       </div>
     </div>
   );
