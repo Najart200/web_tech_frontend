@@ -74,6 +74,11 @@ The Student Resource Booking System is designed to help students book study room
 
 3.npm run dev
 
+
+# Admin login
+Gmail: admin1@gmail.com
+Password: admin
+
 ## Backend
 
 4.Clone the backend repository
@@ -101,5 +106,5 @@ node server.js
 
 # License
 This project is licensed under the MIT License. See the LICENSE file for details.
-https://github.com/Najart200/web_tech_frontend#MIT-1-ov-file
+https://github.com/Najart200/web_tech_frontend#MIT-1-ov-file 
 
